@@ -1,0 +1,57 @@
+{
+  "name": "@kollectyve/chain-descriptors",
+  "version": "0.1.0-alpha.2",
+  "description": "Generated PAPI descriptors for the Kollectyve runtime. Versioned with the chain's specVersion, not with the SDK.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "browser": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.mjs",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./chain-info": {
+      "types": "./dist/chain-info.d.ts",
+      "import": "./dist/chain-info.mjs",
+      "default": "./dist/chain-info.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "chain-info.json",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "node ../../scripts/sync-descriptors.mjs"
+  },
+  "peerDependencies": {
+    "polkadot-api": ">=1.21.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "Kollectyve Labs",
+  "homepage": "https://github.com/kollectyve-labs/kollectyve-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/kollectyve-labs/kollectyve-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kollectyve-labs/kollectyve-sdk.git",
+    "directory": "packages/descriptors"
+  },
+  "keywords": [
+    "kollectyve",
+    "polkadot-api",
+    "papi",
+    "descriptors",
+    "metadata"
+  ]
+}

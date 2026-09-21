@@ -1,0 +1,56 @@
+{
+  "name": "@kollectyve/react",
+  "version": "0.1.0-alpha.2",
+  "description": "React bindings for the Kollectyve SDK — provider, hooks and wallet connection.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@kollectyve/sdk": "0.1.0-alpha.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "react": "^18.3.1"
+  },
+  "license": "MIT",
+  "author": "Kollectyve Labs",
+  "homepage": "https://github.com/kollectyve-labs/kollectyve-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/kollectyve-labs/kollectyve-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kollectyve-labs/kollectyve-sdk.git",
+    "directory": "packages/react"
+  },
+  "keywords": [
+    "kollectyve",
+    "react",
+    "hooks",
+    "web3",
+    "dapp"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

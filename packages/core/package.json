@@ -1,0 +1,51 @@
+{
+  "name": "@kollectyve/core",
+  "version": "0.1.0-alpha.2",
+  "description": "Kollectyve SDK core — chain constants, the AccountId32⇄H160 address bridge, SS58, shared types and errors.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.5.0",
+    "@scure/base": "^1.1.9"
+  },
+  "license": "MIT",
+  "author": "Kollectyve Labs",
+  "homepage": "https://github.com/kollectyve-labs/kollectyve-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/kollectyve-labs/kollectyve-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kollectyve-labs/kollectyve-sdk.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "kollectyve",
+    "substrate",
+    "polkadot",
+    "ss58",
+    "address",
+    "pallet-revive"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

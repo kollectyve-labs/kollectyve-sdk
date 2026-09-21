@@ -1,0 +1,52 @@
+{
+  "name": "@kollectyve/sdk",
+  "version": "0.1.0-alpha.2",
+  "description": "Kollectyve chain SDK — one client for the Substrate pallets and the EVM (pallet-revive) side.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@kollectyve/core": "0.1.0-alpha.2",
+    "@kollectyve/evm": "0.1.0-alpha.2",
+    "@kollectyve/substrate": "0.1.0-alpha.2"
+  },
+  "license": "MIT",
+  "author": "Kollectyve Labs",
+  "homepage": "https://github.com/kollectyve-labs/kollectyve-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/kollectyve-labs/kollectyve-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kollectyve-labs/kollectyve-sdk.git",
+    "directory": "packages/sdk"
+  },
+  "keywords": [
+    "kollectyve",
+    "blockchain",
+    "substrate",
+    "evm",
+    "sdk",
+    "web3"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

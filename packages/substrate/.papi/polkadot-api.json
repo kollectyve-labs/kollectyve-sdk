@@ -1,0 +1,12 @@
+{
+  "version": 0,
+  "descriptorPath": ".papi/descriptors",
+  "entries": {
+    "kollectyve": {
+      "wsUrl": "wss://rpc-testnet.kollectyve.com",
+      "metadata": ".papi/metadata/kollectyve.scale",
+      "genesis": "0xf97f2974d936c6d3a64e5fe604ad12da20bd147e42210476ffae3f1047ffb8bb",
+      "codeHash": "0xf9adcf1713c267f6b700e5525f29fa2dbd2ab9d43eaaa78e38780f4c029031bf"
+    }
+  }
+}

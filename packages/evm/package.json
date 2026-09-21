@@ -1,0 +1,50 @@
+{
+  "name": "@kollectyve/evm",
+  "version": "0.1.0-alpha.2",
+  "description": "Kollectyve SDK — EVM side (pallet-revive via eth-rpc), built on viem.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@kollectyve/core": "0.1.0-alpha.2",
+    "viem": "^2.21.0"
+  },
+  "license": "MIT",
+  "author": "Kollectyve Labs",
+  "homepage": "https://github.com/kollectyve-labs/kollectyve-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/kollectyve-labs/kollectyve-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kollectyve-labs/kollectyve-sdk.git",
+    "directory": "packages/evm"
+  },
+  "keywords": [
+    "kollectyve",
+    "evm",
+    "viem",
+    "pallet-revive",
+    "ethereum"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

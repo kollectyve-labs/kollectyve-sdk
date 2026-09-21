@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.papi/descriptors/
+coverage/
+
+# Never commit credentials: the faucet script reads its seed from the environment.
+.env
+.env.*
+!.env.example
+
+.DS_Store
