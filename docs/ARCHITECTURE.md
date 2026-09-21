@@ -4,7 +4,7 @@
 
 The SDK's first framing was "frontend-dApp first", written when the only planned consumers were
 Kollectyve's own products. Those products follow the account-abstraction rule in the chain's
-[`INTEGRATION-MAP.md`](../../kollectyve-chain/docs/account-abstraction/INTEGRATION-MAP.md):
+[`INTEGRATION-MAP.md`](https://github.com/kollectyve-labs/kollectyve-chain):
 *only backends touch keys and the chain.* Read narrowly that rule seems to say frontends never
 use an SDK at all — but it is scoped to **custodial** users, whose keys Kollectyve holds. It
 says nothing about actors who hold their own keys, and the testnet exists precisely so those

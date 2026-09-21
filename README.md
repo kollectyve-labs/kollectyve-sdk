@@ -1,6 +1,6 @@
 # Kollectyve SDK
 
-TypeScript SDK for the [Kollectyve chain](../kollectyve-chain) — one toolkit for **both**
+TypeScript SDK for the [Kollectyve chain](https://github.com/kollectyve-labs/kollectyve-chain) — one toolkit for **both**
 sides of the chain:
 
 - **Substrate** — the custom pallets (identity, policy, kumulus), built on
@@ -58,10 +58,33 @@ Writes are origin-gated: `register_identity` needs the **enrollment** origin and
 
 ```sh
 # prerelease while the testnet settles — pin exactly; the API moves
-npm i @kollectyve/sdk@0.1.0-alpha.1
+npm i @kollectyve/sdk@0.1.0-alpha.2
 # for React apps:
-npm i @kollectyve/react@0.1.0-alpha.1 react
+npm i @kollectyve/react@0.1.0-alpha.2 react
 ```
+
+## The testnet
+
+| Setting | Value |
+|---|---|
+| Substrate RPC | `wss://rpc-testnet.kollectyve.com` |
+| EVM RPC | `https://rpc-testnet.kollectyve.com/eth` |
+| Chain ID (EVM) | `28000` |
+| Token | `tRS`, 12 decimals on Substrate / 18 on the EVM |
+| Block time | ~6 seconds |
+| Faucet | [faucet.kollectyve.com](https://faucet.kollectyve.com) — 10 tRS per address / 24h |
+
+These are the defaults, so `network: "testnet"` needs no endpoints. State persists: it is a real
+chain spec, not `--dev`.
+
+One thing that surprises everyone once — **`eth_getBalance` reports less than the Substrate
+side**, by exactly `0.001 tRS`. That is the existential deposit: it keeps the account alive and
+cannot be spent, so the EVM reports spendable balance while `System.Account` reports free
+balance. Both are correct; reconciling them means adding the deposit back, not raising an alarm.
+
+Deploying contracts rather than using the SDK? Start with the
+[Hardhat example](https://github.com/kollectyve-labs/kollectyve-hardhat-example) or the
+[guide (French)](https://docs.kollectyve.com/evm/deployer-un-contrat).
 
 ## Quickstart
 
@@ -278,10 +301,12 @@ npm run smoke      # end-to-end against a running dev chain — see below
 `node scripts/faucet.mjs <address> [amount] [network]` funds either side of a chain — an `0x`
 address over the EVM, an SS58 address over Substrate, both crediting the same account. Set
 `KOLLECTYVE_FAUCET_SEED` / `KOLLECTYVE_FAUCET_EVM_KEY` or it falls back to the public dev keys.
-See [the chain's keys-and-faucet doc](../docs/chain/TESTNET-KEYS-AND-FAUCET.md).
+For the public testnet, use the web faucet at
+[faucet.kollectyve.com](https://faucet.kollectyve.com) instead — 10 tRS per address every 24h.
 
 `npm run smoke` exercises every façade call and both sides of the address bridge against a
-local `dev-chain.sh`, asserting each extrinsic actually dispatched. It is the only check that
+local dev chain (`dev-chain.sh` in the
+[chain repo](https://github.com/kollectyve-labs/kollectyve-chain)), asserting each extrinsic actually dispatched. It is the only check that
 proves the SDK's encodings are what the runtime accepts; unit tests and the compiler cannot.
 It exits non-zero with a clear message if no node is listening.
 
@@ -294,7 +319,7 @@ All six packages share one version and ship together, in dependency order — `c
 `chain-descriptors` → `evm` → `substrate` → `sdk` → `react`.
 
 ```sh
-node scripts/version.mjs prerelease   # 0.1.0-alpha.1 → 0.1.0-alpha.2 (all six, in lockstep)
+node scripts/version.mjs prerelease   # 0.1.0-alpha.2 → 0.1.0-alpha.3 (all six, in lockstep)
 npm install                           # refresh the lockfile
 npm run publish:dry                   # builds, tests, packs every tarball; sends nothing
 npm login
@@ -335,14 +360,17 @@ It also catches a genesis mismatch — a different chain, or a dev chain that wa
 
 ## Status
 
-Pre-1.0. Not yet on npm — until it is, consume it from this workspace
-(`npm install && npm run build`).
+Pre-1.0. Published on npm as `0.1.0-alpha.2` — all six packages, on both the `latest` and
+`next` tags.
 
 Implemented and tested: `@kollectyve/core` (address bridge, SS58, constants, commitments), and
-the Substrate façades, which now cover every call and storage item of the three pallets on the
-typed PAPI API with SCALE shapes pinned by `packages/substrate/test/codec.test.ts`. The EVM and
-React layers are exercised by type-checking. `npm run smoke` covers the whole surface
-end-to-end against a dev chain.
+the Substrate façades, which cover every call and storage item of the three pallets on the typed
+PAPI API, with SCALE shapes pinned by `packages/substrate/test/codec.test.ts`. The EVM and React
+layers are exercised by type-checking. `npm run smoke` covers the whole surface end-to-end
+against a dev chain.
 
-Every client defaults to `network: "testnet"`; pass `network: "local"` while the testnet is
-down. Public API may change before 1.0 — pin exact versions.
+Every client defaults to `network: "testnet"`, which is live — see
+[the network table](#the-testnet). Pass `network: "local"` to work against a dev chain instead.
+
+The public API may change before 1.0, so **pin exact versions**. A published version is
+permanent and prereleases move fast.
