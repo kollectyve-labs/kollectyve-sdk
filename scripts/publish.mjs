@@ -28,6 +28,7 @@ import { readFileSync } from "node:fs";
 
 const DEPENDENCY_ORDER = [
   "packages/core",
+  "packages/credentials",
   "packages/descriptors",
   "packages/evm",
   "packages/substrate",
