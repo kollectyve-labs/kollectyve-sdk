@@ -3,7 +3,6 @@ import { bytesToHex, decodeSs58, hexToBytes, type H256Hex, type Hex, type Identi
 import { canonicalize, credentialDigest } from "./canonical.js";
 import type { KollectyveCredential } from "./credential.js";
 import { identityDid, parseIdentityDid, type KollectyveDid } from "./did.js";
-import type { ControllerKey } from "./keyring.js";
 import {
   verifyCredential,
   type ChainReader,
@@ -31,6 +30,16 @@ export interface Presentation {
   credentials: KollectyveCredential[];
 }
 
+/**
+ * Anything that can sign for the holder's controller account with sr25519: a `KeyRing`
+ * controller key, or a browser extension (Talisman, Polkadot.js) via `signRaw`.
+ */
+export interface PresentationSigner {
+  /** SS58 address of the signing account. */
+  address: string;
+  sign(message: Uint8Array): Uint8Array | Promise<Uint8Array>;
+}
+
 /** Domain-separates presentation signatures from anything else the key ever signs. */
 const SIGNING_PREFIX = "kollectyve:presentation:v1:";
 
@@ -38,15 +47,30 @@ function signingBytes(payload: PresentationPayload): Uint8Array {
   return new TextEncoder().encode(SIGNING_PREFIX + canonicalize(payload));
 }
 
-/** Holder side: present credentials, signed by the identity's current controller key. */
-export function createPresentation(input: {
-  key: ControllerKey;
+/**
+ * The bytes extensions actually sign for `signRaw`: the message wrapped in `<Bytes>…</Bytes>`,
+ * so a dApp can never get them to sign something that parses as a transaction.
+ */
+export function wrapBytes(message: Uint8Array): Uint8Array {
+  const enc = new TextEncoder();
+  const open = enc.encode("<Bytes>");
+  const close = enc.encode("</Bytes>");
+  const out = new Uint8Array(open.length + message.length + close.length);
+  out.set(open, 0);
+  out.set(message, open.length);
+  out.set(close, open.length + message.length);
+  return out;
+}
+
+/** Holder side: present credentials, signed by the identity's current controller. */
+export async function createPresentation(input: {
+  key: PresentationSigner;
   holder: IdentityId;
   credentials: KollectyveCredential[];
   challenge: string;
   audience: string;
   now?: number;
-}): Presentation {
+}): Promise<Presentation> {
   const payload: PresentationPayload = {
     type: "KollectyvePresentation",
     holder: identityDid(input.holder),
@@ -58,7 +82,7 @@ export function createPresentation(input: {
   return {
     payload,
     signer: input.key.address,
-    signature: bytesToHex(input.key.sign(signingBytes(payload))),
+    signature: bytesToHex(await input.key.sign(signingBytes(payload))),
     credentials: input.credentials,
   };
 }
@@ -105,7 +129,13 @@ export async function verifyPresentation(
   } catch (e) {
     return fail((e as Error).message);
   }
-  if (!sr25519Verify(signingBytes(payload), hexToBytes(p.signature), signerKey)) {
+  const message = signingBytes(payload);
+  const signature = hexToBytes(p.signature);
+  // A key held by the wallet signs the message; an extension signs it `<Bytes>`-wrapped.
+  if (
+    !sr25519Verify(message, signature, signerKey) &&
+    !sr25519Verify(wrapBytes(message), signature, signerKey)
+  ) {
     return fail("bad signature", holder);
   }
   const controller = await reader.controllerOf(holder);

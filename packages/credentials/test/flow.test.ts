@@ -6,6 +6,7 @@ import {
   createPresentation,
   KeyRing,
   verifyCredential,
+  wrapBytes,
   verifyPresentation,
   type ChainCredential,
   type ChainReader,
@@ -141,7 +142,7 @@ describe("presentations", () => {
 
   it("round-trips: holder presents, verifier accepts", async () => {
     const { chain, ring, diploma } = world();
-    const p = createPresentation({
+    const p = await createPresentation({
       key: ring.controller(0),
       holder: GRADUATE,
       credentials: [diploma.credential],
@@ -157,7 +158,7 @@ describe("presentations", () => {
 
   it("refuses replay to another verifier or with another nonce", async () => {
     const { chain, ring, diploma } = world();
-    const p = createPresentation({
+    const p = await createPresentation({
       key: ring.controller(0),
       holder: GRADUATE,
       credentials: [diploma.credential],
@@ -174,7 +175,7 @@ describe("presentations", () => {
 
   it("stops accepting the old key after rotation", async () => {
     const { chain, ring, diploma } = world();
-    const old = createPresentation({
+    const old = await createPresentation({
       key: ring.controller(0),
       holder: GRADUATE,
       credentials: [diploma.credential],
@@ -183,7 +184,7 @@ describe("presentations", () => {
     chain.controllers.set(GRADUATE, ring.controller(1).address); // rotate_to_committed
     const r = await verifyPresentation(chain, old, ask);
     expect(r.reason).toMatch(/current controller/);
-    const fresh = createPresentation({
+    const fresh = await createPresentation({
       key: ring.controller(1),
       holder: GRADUATE,
       credentials: [diploma.credential],
@@ -194,7 +195,7 @@ describe("presentations", () => {
 
   it("refuses someone else's credential and tampered payloads", async () => {
     const { chain, ring, accreditation, diploma } = world();
-    const theirs = createPresentation({
+    const theirs = await createPresentation({
       key: ring.controller(0),
       holder: GRADUATE,
       credentials: [accreditation.credential],
@@ -202,7 +203,7 @@ describe("presentations", () => {
     });
     expect((await verifyPresentation(chain, theirs, ask)).reason).toMatch(/someone other/);
 
-    const p = createPresentation({
+    const p = await createPresentation({
       key: ring.controller(0),
       holder: GRADUATE,
       credentials: [diploma.credential],
@@ -210,5 +211,14 @@ describe("presentations", () => {
     });
     const tampered = { ...p, payload: { ...p.payload, holder: "did:kollectyve:1" as const } };
     expect((await verifyPresentation(chain, tampered, ask)).reason).toBe("bad signature");
+  });
+
+  it("accepts a signature made the way extensions sign (<Bytes>-wrapped)", async () => {
+    const { chain, ring, diploma } = world();
+    const key = ring.controller(0);
+    // What Talisman / Polkadot.js do inside signRaw.
+    const extension = { address: key.address, sign: async (m: Uint8Array) => key.sign(wrapBytes(m)) };
+    const p = await createPresentation({ key: extension, holder: GRADUATE, credentials: [diploma.credential], ...ask });
+    expect((await verifyPresentation(chain, p, ask)).valid).toBe(true);
   });
 });
