@@ -1,6 +1,6 @@
 {
   "name": "@kollectyve/substrate",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Kollectyve SDK — Substrate side (pallets) built on polkadot-api (PAPI).",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,11 +23,11 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@kollectyve/core": "0.1.0-alpha.2",
+    "@kollectyve/core": "0.1.0-alpha.3",
     "polkadot-api": "^1.7.0",
     "@polkadot-labs/hdkd": "^0.0.10",
     "@polkadot-labs/hdkd-helpers": "^0.0.10",
-    "@kollectyve/chain-descriptors": "0.1.0-alpha.2"
+    "@kollectyve/chain-descriptors": "0.1.0-alpha.3"
   },
   "license": "MIT",
   "author": "Kollectyve Labs",
