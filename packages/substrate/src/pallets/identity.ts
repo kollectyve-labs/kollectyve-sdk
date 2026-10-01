@@ -1,4 +1,4 @@
-import { TransactionError, userCommitment, type H256Hex, type IdentityId, type KycTier } from "@kollectyve/core";
+import { TransactionError, bytesToHex, userCommitment, type H256Hex, type IdentityId, type KycTier } from "@kollectyve/core";
 import type { SubstrateClient } from "../client.js";
 import { h256, tierFromChain, tierToChain } from "../codec.js";
 import { watchEvent, type ChainEvent, type Unsubscribe, type WatchOptions } from "../events.js";
@@ -27,9 +27,10 @@ export interface ControllerRotated {
 /**
  * `pallet-kollectyve-id` — the stable on-chain identity anchor.
  *
- * Calls: `register_identity`, `set_tier`, `rotate_controller`.
+ * Calls: `register_identity`, `set_tier`, `rotate_controller`, `commit_next_controller`,
+ * `rotate_to_committed`.
  * Storage: `IdentityOf`, `ControllerOf`, `TierOf`, `NextIdentityId`, `UsedCommitments`,
- * `EnrollmentKey`, `ComplianceKey`.
+ * `EnrollmentKey`, `ComplianceKey`, `NextControllerCommitment`.
  * Events: `IdentityRegistered`, `TierSet`, `ControllerRotated`.
  *
  * Only `rotate_controller` is open to ordinary users; registration and tier changes are
@@ -74,6 +75,15 @@ export class IdentityModule {
     return this.c.api.query.KollectyveId.UsedCommitments.getValue(h256(commitment));
   }
 
+  /**
+   * The pre-rotation commitment of an identity: `blake2_256(next controller's public key)`, or
+   * `undefined` when the identity is not under pre-rotation.
+   */
+  async nextControllerCommitment(id: IdentityId): Promise<H256Hex | undefined> {
+    const c = await this.c.api.query.KollectyveId.NextControllerCommitment.getValue(id);
+    return c ? bytesToHex(c.asBytes()) : undefined;
+  }
+
   /** The account wired as the enrollment origin at genesis. `undefined` = root/sudo only. */
   enrollmentKey(): Promise<string | undefined> {
     return this.c.api.query.KollectyveId.EnrollmentKey.getValue();
@@ -114,6 +124,32 @@ export class IdentityModule {
    */
   rotateController(id: IdentityId, next: string, options?: SignerOrTxOptions) {
     return this.c.submit(this.c.api.tx.KollectyveId.rotate_controller({ id, new: next }), options);
+  }
+
+  /**
+   * Opt into pre-rotation: commit to the hash of the next controller. **Controller-only**, and
+   * only once — afterwards the commitment changes only through {@link rotateToCommitted}.
+   * Compute `commitment` with `controllerCommitment()` from `@kollectyve/credentials`.
+   */
+  commitNextController(id: IdentityId, commitment: H256Hex, options?: SignerOrTxOptions) {
+    return this.c.submit(
+      this.c.api.tx.KollectyveId.commit_next_controller({ id, commitment: h256(commitment) }),
+      options,
+    );
+  }
+
+  /**
+   * Take control of a pre-rotated identity. **Signed by the committed next key**, which becomes
+   * the controller. `nextCommitment` commits to the key after it; omit it to leave pre-rotation.
+   */
+  rotateToCommitted(id: IdentityId, nextCommitment?: H256Hex, options?: SignerOrTxOptions) {
+    return this.c.submit(
+      this.c.api.tx.KollectyveId.rotate_to_committed({
+        id,
+        next_commitment: nextCommitment ? h256(nextCommitment) : undefined,
+      }),
+      options,
+    );
   }
 
   /**

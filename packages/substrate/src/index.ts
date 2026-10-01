@@ -7,6 +7,7 @@ import { IdentityModule } from "./pallets/identity.js";
 import { PolicyModule } from "./pallets/policy.js";
 import { KumulusModule } from "./pallets/kumulus.js";
 import { BalancesModule } from "./pallets/balances.js";
+import { CredentialsModule } from "./pallets/credentials.js";
 
 export {
   SubstrateClient,
@@ -30,6 +31,7 @@ export {
 } from "./pallets/policy.js";
 export { KumulusModule, type ProviderChanged } from "./pallets/kumulus.js";
 export { BalancesModule } from "./pallets/balances.js";
+export { CredentialsModule, chainReader, type CredentialRecord } from "./pallets/credentials.js";
 export {
   pullEvents,
   watchEvent,
@@ -74,6 +76,7 @@ export class KollectyveSubstrate {
   readonly policy: PolicyModule;
   readonly kumulus: KumulusModule;
   readonly balances: BalancesModule;
+  readonly credentials: CredentialsModule;
 
   constructor(options: SubstrateClientOptions = {}) {
     this.client = new SubstrateClient(options);
@@ -81,6 +84,7 @@ export class KollectyveSubstrate {
     this.policy = new PolicyModule(this.client);
     this.kumulus = new KumulusModule(this.client);
     this.balances = new BalancesModule(this.client);
+    this.credentials = new CredentialsModule(this.client);
   }
 
   destroy(): void {
