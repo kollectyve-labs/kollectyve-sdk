@@ -2,7 +2,7 @@ import { KeyRing, verifyCredential, createPresentation, verifyPresentation } fro
 import { KollectyveSubstrate, chainReader, signerFromKeypair } from "@kollectyve/substrate";
 import { bytesToHex } from "@kollectyve/core";
 
-// The whole wallet lifecycle against a chain and a wallet gateway (apps-sites/wallet-gateway):
+// The whole wallet lifecycle against a chain and a wallet gateway (apps-sites/amaan-gateway):
 // enroll → commit next key → demo diploma → verify → present → move funds → rotate.
 //
 //   WS=ws://127.0.0.1:9944 GATEWAY=http://127.0.0.1:8788 node examples/wallet-flow.mjs
