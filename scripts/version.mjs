@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 const PACKAGES = [
   "packages/core",
+  "packages/credentials",
   "packages/descriptors",
   "packages/evm",
   "packages/substrate",

@@ -1,6 +1,6 @@
 {
   "name": "@kollectyve/evm",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Kollectyve SDK — EVM side (pallet-revive via eth-rpc), built on viem.",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@kollectyve/core": "0.1.0-alpha.2",
+    "@kollectyve/core": "0.1.0-alpha.3",
     "viem": "^2.21.0"
   },
   "license": "MIT",

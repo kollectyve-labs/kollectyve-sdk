@@ -35,4 +35,16 @@ export class BalancesModule {
       options,
     );
   }
+
+  /**
+   * Send everything spendable to `dest`. With `keepAlive: false` the sender may be reaped,
+   * which is what a key rotation wants: the outgoing key's balance moves to the incoming key so
+   * the incoming key can pay for `rotate_to_committed`.
+   */
+  transferAll(dest: string, keepAlive: boolean, options?: SignerOrTxOptions) {
+    return this.c.submit(
+      this.c.api.tx.Balances.transfer_all({ dest: { type: "Id", value: dest }, keep_alive: keepAlive }),
+      options,
+    );
+  }
 }

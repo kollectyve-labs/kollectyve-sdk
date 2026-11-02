@@ -1,6 +1,6 @@
 {
   "name": "@kollectyve/chain-descriptors",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Generated PAPI descriptors for the Kollectyve runtime. Versioned with the chain's specVersion, not with the SDK.",
   "type": "module",
   "main": "./dist/index.js",

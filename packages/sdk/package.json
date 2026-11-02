@@ -1,6 +1,6 @@
 {
   "name": "@kollectyve/sdk",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Kollectyve chain SDK — one client for the Substrate pallets and the EVM (pallet-revive) side.",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,9 +23,9 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@kollectyve/core": "0.1.0-alpha.2",
-    "@kollectyve/evm": "0.1.0-alpha.2",
-    "@kollectyve/substrate": "0.1.0-alpha.2"
+    "@kollectyve/core": "0.1.0-alpha.3",
+    "@kollectyve/evm": "0.1.0-alpha.3",
+    "@kollectyve/substrate": "0.1.0-alpha.3"
   },
   "license": "MIT",
   "author": "Kollectyve Labs",
